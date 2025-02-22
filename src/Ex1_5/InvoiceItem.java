@@ -10,31 +10,24 @@ public class InvoiceItem {
             this.qty = qty;
             this.unitPrice = unitPrice;
         }
-
         public String getId() {
             return id;
         }
-
         public String getDesc() {
             return desc;
         }
-
         public int getQty() {
             return qty;
         }
-
         public void setQty(int qty) {
             this.qty = qty;
         }
-
         public double getUnitPrice() {
             return unitPrice;
         }
-
         public void setUnitPrice(double unitPrice) {
             this.unitPrice = unitPrice;
         }
-
         public double getTotal() {
             return unitPrice * qty;
         }
