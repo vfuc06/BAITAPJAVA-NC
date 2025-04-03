@@ -1,0 +1,20 @@
+la la la
+-- Content from source.txt --
+Xin chào các bạn!!
+
+-- Content from dest.txt --
+Xin chào các bạn!!
+
+-- Content from source.txt --
+lalalaaaaa
+
+-- Content from dest.txt --
+Xin chào các bạn!!
+
+-- Content from source.txt --
+lalalaaaaa
+
+-- Content from dest.txt --
+Xin chào các bạn!!
+
+lalalaaaaaĐây là file sourceS
