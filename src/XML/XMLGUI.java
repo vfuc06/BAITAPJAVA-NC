@@ -1,4 +1,4 @@
-package TH270325;
+package XML;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

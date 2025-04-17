@@ -1,4 +1,4 @@
-package TH270325;
+package XML;
 
 public class Book {
     private String id, title, author, year;

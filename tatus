@@ -1,0 +1,163 @@
+warning: in the working copy of '.idea/vcs.xml', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/.idea/vcs.xml b/.idea/vcs.xml[m
+[1mindex 35eb1dd..259adc9 100644[m
+[1m--- a/.idea/vcs.xml[m
+[1m+++ b/.idea/vcs.xml[m
+[36m@@ -2,5 +2,6 @@[m
+ <project version="4">[m
+   <component name="VcsDirectoryMappings">[m
+     <mapping directory="" vcs="Git" />[m
+[32m+[m[32m    <mapping directory="$PROJECT_DIR$/src" vcs="Git" />[m
+   </component>[m
+ </project>[m
+\ No newline at end of file[m
+[1mdiff --git a/Review OPP.iml b/Review OPP.iml[m
+[1mindex c90834f..fb8e866 100644[m
+[1m--- a/Review OPP.iml[m	
+[1m+++ b/Review OPP.iml[m	
+[36m@@ -7,5 +7,6 @@[m
+     </content>[m
+     <orderEntry type="inheritedJdk" />[m
+     <orderEntry type="sourceFolder" forTests="false" />[m
+[32m+[m[32m    <orderEntry type="library" name="lib" level="project" />[m
+   </component>[m
+ </module>[m
+\ No newline at end of file[m
+[1mdiff --git a/src/Bcrypt/UserGUI.java b/src/Bcrypt/UserGUI.java[m
+[1mindex 6c3b7ef..d1b3ee9 100644[m
+[1m--- a/src/Bcrypt/UserGUI.java[m
+[1m+++ b/src/Bcrypt/UserGUI.java[m
+[36m@@ -1,4 +1,199 @@[m
+ package Bcrypt;[m
+ [m
+[32m+[m[32mimport javax.swing.*;[m
+[32m+[m[32mimport java.awt.*;[m
+[32m+[m[32mimport java.awt.event.*;[m
+[32m+[m[32mimport javax.swing.table.DefaultTableModel;[m
+[32m+[m
+ public class UserGUI {[m
+[32m+[m
+[32m+[m[32m    private JFrame frame;[m
+[32m+[m[32m    private JTabbedPane tabbedPane;[m
+[32m+[m[32m    private JTextField nameField, classField, studentIdField, usernameField, loginUsernameField;[m
+[32m+[m[32m    private JPasswordField passwordField, loginPasswordField;[m
+[32m+[m[32m    private JTable userTable; // Bảng để hiển thị danh sách người dùng[m
+[32m+[m[32m    private DefaultTableModel tableModel; // Mô hình bảng chứa dữ liệu người dùng[m
+[32m+[m
+[32m+[m[32m    public UserGUI() {[m
+[32m+[m[32m        frame = new JFrame("Ứng Dụng Đăng Ký / Đăng Nhập");[m
+[32m+[m[32m        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);[m
+[32m+[m[32m        frame.setSize(500, 400);[m
+[32m+[m[32m        frame.setLayout(new BorderLayout(10, 10));[m
+[32m+[m[32m        frame.setLocationRelativeTo(null);[m
+[32m+[m
+[32m+[m[32m        tabbedPane = new JTabbedPane();[m
+[32m+[m[32m        frame.add(tabbedPane, BorderLayout.CENTER);[m
+[32m+[m
+[32m+[m[32m        createRegisterTab();[m
+[32m+[m[32m        createLoginTab();[m
+[32m+[m[32m        createTableTab();  // Thêm tab bảng hiển thị người dùng[m
+[32m+[m
+[32m+[m[32m        JPanel buttonPanel = new JPanel();[m
+[32m+[m[32m        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));[m
+[32m+[m
+[32m+[m[32m        JButton viewUsersButton = new JButton("Xem danh sách người dùng");[m
+[32m+[m[32m        viewUsersButton.addActionListener(e -> UserManager.displayUsers(tableModel)); // Hiển thị danh sách người dùng[m
+[32m+[m[32m        buttonPanel.add(viewUsersButton);[m
+[32m+[m
+[32m+[m[32m        JButton clearDataButton = new JButton("Xóa toàn bộ dữ liệu");[m
+[32m+[m[32m        clearDataButton.addActionListener(e -> {[m
+[32m+[m[32m            int option = JOptionPane.showConfirmDialog(frame, "Bạn có chắc chắn muốn xóa toàn bộ dữ liệu?", "Xác nhận", JOptionPane.YES_NO_OPTION);[m
+[32m+[m[32m            if (option == JOptionPane.YES_OPTION) {[m
+[32m+[m[32m                UserManager.clearXMLData();[m
+[32m+[m[32m            }[m
+[32m+[m[32m        });[m
+[32m+[m[32m        buttonPanel.add(clearDataButton);[m
+[32m+[m
+[32m+[m[32m        JButton resetButton = new JButton("Reset ");[m
+[32m+[m[32m        resetButton.addActionListener(e -> resetForm());[m
+[32m+[m[32m        buttonPanel.add(resetButton);[m
+[32m+[m
+[32m+[m[32m        frame.add(buttonPanel, BorderLayout.SOUTH);[m
+[32m+[m
+[32m+[m[32m        frame.setVisible(true);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    private void createRegisterTab() {[m
+[32m+[m[32m        JPanel registerPanel = new JPanel();[m
+[32m+[m[32m        registerPanel.setLayout(new GridBagLayout());[m
+[32m+[m[32m        GridBagConstraints gbc = new GridBagConstraints();[m
+[32m+[m[32m        gbc.insets = new Insets(10, 10, 10, 10);[m
+[32m+[m
+[32m+[m[32m        JLabel nameLabel = new JLabel("Tên:");[m
+[32m+[m[32m        nameField = new JTextField(20);[m
+[32m+[m[32m        JLabel classLabel = new JLabel("Lớp:");[m
+[32m+[m[32m        classField = new JTextField(20);[m
+[32m+[m[32m        JLabel studentIdLabel = new JLabel("Mã số sinh viên:");[m
+[32m+[m[32m        studentIdField = new JTextField(20);[m
+[32m+[m[32m        JLabel usernameLabel = new JLabel("Tên đăng nhập:");[m
+[32m+[m[32m        usernameField = new JTextField(20);[m
+[32m+[m[32m        JLabel passwordLabel = new JLabel("Mật khẩu:");[m
+[32m+[m[32m        passwordField = new JPasswordField(20);[m
+[32m+[m
+[32m+[m[32m        JButton registerButton = new JButton("Đăng ký");[m
+[32m+[m[32m        registerButton.addActionListener(e -> {[m
+[32m+[m[32m            String name = nameField.getText();[m
+[32m+[m[32m            String className = classField.getText();[m
+[32m+[m[32m            String studentId = studentIdField.getText();[m
+[32m+[m[32m            String username = usernameField.getText();[m
+[32m+[m[32m            String password = new String(passwordField.getPassword());[m
+[32m+[m
+[32m+[m[32m            if (name.isEmpty() || className.isEmpty() || studentId.isEmpty() || username.isEmpty() || password.isEmpty()) {[m
+[32m+[m[32m                JOptionPane.showMessageDialog(frame, "Vui lòng điền đầy đủ thông tin.");[m
+[32m+[m[32m            } else {[m
+[32m+[m[32m                String hashedPassword = UserManager.hashPassword(password);[m
+[32m+[m[32m                UserManager.saveUserToXML(name, className, studentId, username, hashedPassword);[m
+[32m+[m[32m            }[m
+[32m+[m[32m        });[m
+[32m+[m
+[32m+[m[32m        gbc.gridx = 0;[m
+[32m+[m[32m        gbc.gridy = 0;[m
+[32m+[m[32m        registerPanel.add(nameLabel, gbc);[m
+[32m+[m[32m        gbc.gridx = 1;[m
+[32m+[m[32m        registerPanel.add(nameField, gbc);[m
+[32m+[m
+[32m+[m[32m        gbc.gridx = 0;[m
+[32m+[m[32m        gbc.gridy = 1;[m
+[32m+[m[32m        registerPanel.add(classLabel, gbc);[m
+[32m+[m[32m        gbc.gridx = 1;[m
+[32m+[m[32m        registerPanel.add(classField, gbc);[m
+[32m+[m
+[32m+[m[32m        gbc.gridx = 0;[m
+[32m+[m[32m        gbc.gridy = 2;[m
+[32m+[m[32m        registerPanel.add(studentIdLabel, gbc);[m
+[32m+[m[32m        gbc.gridx = 1;[m
+[32m+[m[32m        registerPanel.add(studentIdField, gbc);[m
+[32m+[m
+[32m+[m[32m        gbc.gridx = 0;[m
+[32m+[m[32m        gbc.gridy = 3;[m
+[32m+[m[32m        registerPanel.add(usernameLabel, gbc);[m
+[32m+[m[32m        gbc.gridx = 1;[m
+[32m+[m[32m        registerPanel.add(usernameField, gbc);[m
+[32m+[m
+[32m+[m[32m        gbc.gridx = 0;[m
+[32m+[m[32m        gbc.gridy = 4;[m
+[32m+[m[32m        registerPanel.add(passwordLabel, gbc);[m
+[32m+[m[32m        gbc.gridx = 1;[m
+[32m+[m[32m        registerPanel.add(passwordField, gbc);[m
+[32m+[m
+[32m+[m[32m        gbc.gridx = 0;[m
+[32m+[m[32m        gbc.gridy = 5;[m
+[32m+[m[32m        gbc.gridwidth = 2;[m
+[32m+[m[32m        registerPanel.add(registerButton, gbc);[m
+[32m+[m
+[32m+[m[32m        tabbedPane.addTab("Đăng ký", registerPanel);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    private void createLoginTab() {[m
+[32m+[m[32m        JPanel loginPanel = new JPanel();[m
+[32m+[m[32m        loginPanel.setLayout(new GridBagLayout());[m
+[32m+[m[32m        GridBagConstraints gbc = new GridBagConstraints();[m
+[32m+[m[32m        gbc.insets = new Insets(10, 10, 10, 10);[m
+[32m+[m
+[32m+[m[32m        JLabel loginUsernameLabel = new JLabel("

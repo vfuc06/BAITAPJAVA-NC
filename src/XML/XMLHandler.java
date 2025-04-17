@@ -1,4 +1,4 @@
-package TH270325;
+package XML;
 
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
